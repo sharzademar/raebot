@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DirectedGraph GraphDirection="LeftToRight" xmlns="http://schemas.microsoft.com/vs/2009/dgml">
+  <Nodes>
+    <Node Id="Discord.Net 0.9.6" Category="Package" Bounds="302.978333333333,106.553333333333,104.226666666667,23.2766666666667" Label="Discord.Net 0.9.6" />
+    <Node Id="Discord.Net.Commands 0.9.6" Category="Package" Bounds="274.338333333333,53.2766666666666,161.506666666667,23.2766666666667" Label="Discord.Net.Commands 0.9.6" />
+    <Node Id="Nito.AsyncEx 3.0.1" Category="Package" Bounds="158.711666666667,159.83,110.76,23.2766666666667" Label="Nito.AsyncEx 3.0.1" />
+    <Node Id="RestSharp 105.2.3" Category="Package" Bounds="300.391666666667,159.83,109.4,23.2766666666667" Label="RestSharp 105.2.3" />
+    <Node Id="WebSocket4Net 0.14.1" Category="Package" Bounds="440.668333333333,159.83,130.846666666667,23.2766666666667" Label="WebSocket4Net 0.14.1" />
+    <Node Id="raebot" Category="Project" Bounds="329.461666666667,0,51.26,23.2766666666667" Label="raebot" />
+  </Nodes>
+  <Links>
+    <Link Source="Discord.Net 0.9.6" Target="Nito.AsyncEx 3.0.1" Category="Package Dependency" Bounds="253.312286376953,129.830001831055,70.9778137207031,26.8188629150391" />
+    <Link Source="Discord.Net 0.9.6" Target="RestSharp 105.2.3" Category="Package Dependency" Bounds="355.091674804688,129.830001831055,0,21" />
+    <Link Source="Discord.Net 0.9.6" Target="WebSocket4Net 0.14.1" Category="Package Dependency" Bounds="388.077758789063,129.830001831055,76.5406188964844,27.0054931640625" />
+    <Link Source="Discord.Net.Commands 0.9.6" Target="Discord.Net 0.9.6" Category="Package Dependency" Bounds="355.091674804688,76.553337097168,0,21" />
+    <Link Source="raebot" Target="Discord.Net.Commands 0.9.6" Category="Installed Package" Bounds="355.091674804688,23.2766666412354,0,21.0000019073486" />
+  </Links>
+  <Categories>
+    <Category Id="Installed Package" />
+    <Category Id="Package" />
+    <Category Id="Package Dependency" />
+    <Category Id="Project" />
+  </Categories>
+  <Properties>
+    <Property Id="Bounds" DataType="System.Windows.Rect" />
+    <Property Id="Expression" DataType="System.String" />
+    <Property Id="GraphDirection" DataType="Microsoft.VisualStudio.Diagrams.Layout.LayoutOrientation" />
+    <Property Id="GroupLabel" DataType="System.String" />
+    <Property Id="IsEnabled" DataType="System.Boolean" />
+    <Property Id="Label" Label="Label" Description="Displayable label of an Annotatable object" DataType="System.String" />
+    <Property Id="TargetType" DataType="System.Type" />
+    <Property Id="Value" DataType="System.String" />
+    <Property Id="ValueLabel" DataType="System.String" />
+  </Properties>
+  <Styles>
+    <Style TargetType="Node" GroupLabel="Project" ValueLabel="True">
+      <Condition Expression="HasCategory('Project')" />
+      <Setter Property="Background" Value="Blue" />
+    </Style>
+    <Style TargetType="Link" GroupLabel="Package Dependency" ValueLabel="True">
+      <Condition Expression="HasCategory('Package Dependency')" />
+      <Setter Property="Background" Value="Yellow" />
+    </Style>
+  </Styles>
+</DirectedGraph>
