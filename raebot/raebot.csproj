@@ -40,6 +40,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Discord.Net.Commands.0.9.6\lib\net45\Discord.Net.Commands.dll</HintPath>
     </Reference>
+    <Reference Include="HelperSharp">
+      <HintPath>..\packages\HelperSharp.0.0.4.2\lib\net35\HelperSharp.dll</HintPath>
+    </Reference>
     <Reference Include="HtmlAgilityPack">
       <HintPath>..\packages\HtmlAgilityPack.1.4.9.5\lib\Net45\HtmlAgilityPack.dll</HintPath>
     </Reference>
@@ -58,6 +61,9 @@
     <Reference Include="Nito.AsyncEx.Enlightenment, Version=3.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Nito.AsyncEx.3.0.1\lib\net45\Nito.AsyncEx.Enlightenment.dll</HintPath>
+    </Reference>
+    <Reference Include="NReco.ImageGenerator">
+      <HintPath>..\packages\NReco.ImageGenerator.1.0.3.0\lib\net20\NReco.ImageGenerator.dll</HintPath>
     </Reference>
     <Reference Include="RestSharp, Version=105.2.3.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -80,12 +86,19 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SearchResult.cs" />
+    <Compile Include="VerbChart.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+    <None Include="tokens.tokens">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="style.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="todo.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

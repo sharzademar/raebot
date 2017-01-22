@@ -20,3 +20,10 @@ c:\users\sharzademar\documents\visual studio 2013\Projects\raebot\raebot\bin\Deb
 c:\users\sharzademar\documents\visual studio 2013\Projects\raebot\raebot\bin\Debug\HtmlAgilityPack.dll
 c:\users\sharzademar\documents\visual studio 2013\Projects\raebot\raebot\bin\Debug\HtmlAgilityPack.pdb
 c:\users\sharzademar\documents\visual studio 2013\Projects\raebot\raebot\bin\Debug\HtmlAgilityPack.xml
+C:\Users\Sharzademar\documents\visual studio 2013\Projects\raebot\raebot\bin\Debug\tokens.tokens
+C:\Users\Sharzademar\documents\visual studio 2013\Projects\raebot\raebot\bin\Debug\HelperSharp.dll
+C:\Users\Sharzademar\documents\visual studio 2013\Projects\raebot\raebot\bin\Debug\NReco.ImageGenerator.dll
+C:\Users\Sharzademar\documents\visual studio 2013\Projects\raebot\raebot\bin\Debug\HelperSharp.pdb
+C:\Users\Sharzademar\documents\visual studio 2013\Projects\raebot\raebot\bin\Debug\HelperSharp.xml
+C:\Users\Sharzademar\documents\visual studio 2013\Projects\raebot\raebot\bin\Debug\NReco.ImageGenerator.xml
+C:\Users\Sharzademar\documents\visual studio 2013\Projects\raebot\raebot\bin\Debug\style.css

@@ -12,6 +12,8 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
 using HtmlAgilityPack;
+using NReco.ImageGenerator;
+using HelperSharp;
 
 namespace raebot
 {
@@ -20,8 +22,9 @@ namespace raebot
         DiscordClient discord;
         WebRequest rae_site;
         bool muted;
+        string dir = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase).Substring(6);
         
-        public MyBot()
+        public MyBot(string token)
         {
             muted = false;
             discord = new DiscordClient(x =>
@@ -60,6 +63,168 @@ namespace raebot
                     {
                         this.muted = false;
                         await e.Channel.SendMessage("RAE Bot ya no está silenciado.");
+                    }
+                });
+
+            commands.CreateCommand("rae-conjugar")
+                .Parameter("verbo", ParameterType.Required)
+                .Parameter("tense", ParameterType.Optional)
+                .Do(async (e) =>
+                {
+                    try
+                    {
+                        rae_site = WebRequest.Create(String.Format("https://dle.rae.es/data/search?w={0}", e.GetArg("verbo")));
+                        rae_site.Headers.Add("Authorization", "Basic cDY4MkpnaFMzOmFHZlVkQ2lFNDM0");
+                        rae_site.Credentials = CredentialCache.DefaultCredentials;
+                        WebResponse rae_repuesta = rae_site.GetResponse();
+                        Stream dataStream = rae_repuesta.GetResponseStream();
+                        StreamReader reader = new StreamReader(dataStream);
+                        string responseFromServer = reader.ReadToEnd();
+
+                        SearchResult sr = JsonConvert.DeserializeObject<SearchResult>(responseFromServer);
+
+                        if (sr.res.Count > 0)
+                        {
+                            rae_site = WebRequest.Create(String.Format("https://dle.rae.es/data/fetch?id={0}", sr.res[0]["id"]));
+                            rae_site.Headers.Add("Authorization", "Basic cDY4MkpnaFMzOmFHZlVkQ2lFNDM0");
+                            rae_site.Credentials = CredentialCache.DefaultCredentials;
+                            rae_repuesta = rae_site.GetResponse();
+                            dataStream = rae_repuesta.GetResponseStream();
+                            reader = new StreamReader(dataStream);
+                            responseFromServer = reader.ReadToEnd();
+
+                            HtmlDocument result_doc = new HtmlDocument();
+                            result_doc.LoadHtml(responseFromServer);
+                            var root = result_doc.DocumentNode;
+
+                            var conju = root
+                                .Descendants("a")
+                                .Where(x =>
+                                    x.Attributes.Contains("title") && x.Attributes["title"].Value.Contains("Conjugar el verbo")
+                                ).ToList();
+
+                            if (conju.Count > 0)
+                            {
+                                string id = conju[0].Attributes["href"].Value.Replace("fetch?id=", "");
+
+                                rae_site = WebRequest.Create(String.Format("https://dle.rae.es/data/fetch?id={0}", id));
+                                rae_site.Headers.Add("Authorization", "Basic cDY4MkpnaFMzOmFHZlVkQ2lFNDM0");
+                                rae_site.Credentials = CredentialCache.DefaultCredentials;
+                                rae_repuesta = rae_site.GetResponse();
+                                dataStream = rae_repuesta.GetResponseStream();
+                                reader = new StreamReader(dataStream);
+                                responseFromServer = reader.ReadToEnd();
+
+                                if (e.GetArg("tense").Equals(String.Empty))
+                                {
+                                    string css = "<style>" + File.ReadAllText(Path.Combine(this.dir, "style.css")) + "</style>";
+                                    responseFromServer = css + responseFromServer;
+                                    responseFromServer = responseFromServer.EscapeAccentsToHtmlEntities();
+
+                                    var jpegBytes = new HtmlToImageConverter().GenerateImage(responseFromServer, ImageFormat.Jpeg);
+                                    string now = DateTime.Now.ToFileTimeUtc().ToString() + ".jpeg";
+                                    now = Path.Combine(this.dir, now);
+                                    FileStream jpeg = new FileStream(now, FileMode.Create, FileAccess.Write);
+                                    jpeg.Write(jpegBytes, 0, jpegBytes.Length);
+                                    jpeg.Close();
+                                    await e.Channel.SendFile(now);
+                                    File.Delete(now);
+                                }
+                                else
+                                {
+                                    VerbChart chart = new VerbChart(responseFromServer);
+
+                                    var param_split = e.GetArg("tense").Split('|').ToList();
+                                    string output = String.Empty;
+
+                                    if (param_split.Count == 1 && e.GetArg("tense").Length >= 4)
+                                    {
+                                        switch (e.GetArg("tense").Substring(0, 4))
+                                        {
+                                            case "infi":
+                                                output = String.Format("Infinitivo de {0}: {1}", e.GetArg("verbo"), chart.infinitive);
+                                                break;
+                                            case "geru":
+                                                output = String.Format("Gerundio de {0}: {1}", e.GetArg("verbo"), chart.gerund);
+                                                break;
+                                            case "part":
+                                                output = String.Format("Participio de {0}: {1}", e.GetArg("verbo"), chart.participle);
+                                                break;
+                                            default:
+                                                output = "2nd parameter must be \"infinitivo\", \"gerundio\", or \"participio\" if only one sub-parameter is given. Abbreviations of no less than 4 characters are accepted.";
+                                                break;
+                                        }
+                                    }
+                                    else if (param_split.Count == 2)
+                                    {
+                                        if (param_split[0].Length >= 4 && param_split[0].Substring(0, 4).Equals("impe"))
+                                        {
+                                            if (chart.imperative.ContainsKey(param_split[1]))
+                                            {
+                                                string arg1 = param_split[0].Substring(0, 4);
+                                                output = String.Format("Forma imperativo {0} de \"{1}\": {2}", param_split[1], e.GetArg("verbo"), chart.imperative[param_split[1]]);
+                                            }
+                                            else
+                                            {
+                                                output = String.Format("\"{0}\" is not a person of the imperative form. Accepted person sub-parameters are; 2s, 2sf, 2p, 2pf", param_split[1]);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            output = "1st sub-parameter must be \"imperative\" if 2 sub-parameters are given. Abbreviations of no less than 4 characters are accepted.";
+                                        }
+                                    }
+                                    else if (param_split.Count == 3)
+                                    {
+                                        if (param_split[0].Length >= 4 || param_split[1].Length >= 4)
+                                        {
+                                            string arg1 = param_split[0].Substring(0, 4);
+                                            string arg2 = param_split[1].Substring(0, 4);
+                                            string arg3 = param_split[2];
+                                            if (!chart.chart_dict.ContainsKey(arg1))
+                                            {
+                                                output = String.Format("\"{0}\" isn't a proper mood. Proper moods accepted are \"indicativo\" and \"subjuntivo\". Abbreviations of no less than 4 chracters are accepted.", arg1);
+                                            }
+                                            else if (!chart.chart_dict[arg1].ContainsKey(arg2))
+                                            {
+                                                output = String.Format("\"{0}\" isn't a tense of the {1} mood.", arg2, arg1);
+                                            }
+                                            else if (!chart.chart_dict[arg1][arg2].ContainsKey(arg3))
+                                            {
+                                                output = String.Format("\"{0}\" isn't a proper person. Accepted persons are 1s, 2s, 2sf, 3s, 1p, 2p, 2pf, 3p", arg3);
+                                            }
+                                            else
+                                            {
+                                                output = String.Format("Forma {0} de \"{1}\": {2}", e.GetArg("tense").Replace("|", " "), e.GetArg("verbo"), chart.chart_dict[arg1][arg2][arg3]);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            output = "Abbreviations must be at least 4 characters.";
+                                        }
+                                    }
+                                    else
+                                    {
+                                        output = "Second parameter must be 1-3 sub-parameters long, with sub-parameters separated with \"|\" as follows; indicativo|futuro|1p";
+                                    }
+                                    await e.Channel.SendMessage(output);
+                                } //end param check
+                            }
+                            else
+                            {
+                                await e.Channel.SendMessage(String.Format("Parece que \"{0}\" no es un verbo...", e.GetArg("verbo")));
+                            } //end verb check
+                        }
+                        else
+                        {
+                            await e.Channel.SendMessage(String.Format("No existe la palabra \"{0}\"...", e.GetArg("verbo")));
+                        } //end word check
+                    }
+                    catch (Exception exc)
+                    {
+                        Console.WriteLine(exc.StackTrace);
+                        Console.WriteLine(String.Format("{0}: {1}", DateTime.Now.ToString("d MMM h:mm:ss tt"), exc.Message));
+                        Console.WriteLine(String.Format("\tCommand issued: !rae {0}", e.Args));
                     }
                 });
 
@@ -155,7 +320,7 @@ namespace raebot
 
             discord.ExecuteAndWait(async () =>
             {
-                await discord.Connect("PLACEHOLDER_TOKEN", TokenType.Bot);
+                await discord.Connect(token, TokenType.Bot);
             });
         }
 

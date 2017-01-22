@@ -20,3 +20,10 @@ c:\users\sharzademar\documents\visual studio 2013\Projects\raebot\raebot\bin\Rel
 c:\users\sharzademar\documents\visual studio 2013\Projects\raebot\raebot\obj\Release\raebot.exe
 c:\users\sharzademar\documents\visual studio 2013\Projects\raebot\raebot\obj\Release\raebot.pdb
 C:\Users\Sharzademar\Documents\Visual Studio 2013\Projects\raebot\raebot\obj\Release\raebot.csprojResolveAssemblyReference.cache
+C:\Users\Sharzademar\documents\visual studio 2013\Projects\raebot\raebot\bin\Release\style.css
+C:\Users\Sharzademar\documents\visual studio 2013\Projects\raebot\raebot\bin\Release\tokens.tokens
+C:\Users\Sharzademar\documents\visual studio 2013\Projects\raebot\raebot\bin\Release\HelperSharp.dll
+C:\Users\Sharzademar\documents\visual studio 2013\Projects\raebot\raebot\bin\Release\NReco.ImageGenerator.dll
+C:\Users\Sharzademar\documents\visual studio 2013\Projects\raebot\raebot\bin\Release\HelperSharp.pdb
+C:\Users\Sharzademar\documents\visual studio 2013\Projects\raebot\raebot\bin\Release\HelperSharp.xml
+C:\Users\Sharzademar\documents\visual studio 2013\Projects\raebot\raebot\bin\Release\NReco.ImageGenerator.xml

@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>NReco.ImageGenerator</id>
+    <version>1.0.3.0</version>
+    <title>NReco.ImageGenerator</title>
+    <authors>Vitalii Fedorchenko</authors>
+    <owners>Vitalii Fedorchenko</owners>
+    <licenseUrl>http://www.nrecosite.com/html_to_image_generator_net.aspx</licenseUrl>
+    <projectUrl>http://www.nrecosite.com/html_to_image_generator_net.aspx</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>HTML-to-Image converter for C#/.NET (WkHtmlToImage wrapper). Can render web pages into image for making thumbnails, convert SVG to jpg or png formats.</description>
+    <summary />
+    <releaseNotes>v.1.0.3: Changes:
+- hotfix for 'The value of argument 'value' (0) is invalid for Enum type 'ProcessPriorityClass' error
+- VC++ 2013 runtime libraries used by wkhtmltoimage.exe ( msvcp120.dll, msvcr120.dll ) are embedded as DLL resources to simplify app deployment
+
+v.1.0.2: Changes:
+- added ProcessPriority and ExecutionTimeout properties&lt;/li&gt;
+- added workaround for "Exit with code 1 due to network error" wkhtmltoimage issue: when "--load-error-handling" or "--load-media-error-handling" set to "ignore" (or "skip") wkhtmltoimage generates an image but exited with code = 1 and as result WkHtmlToImageException is thrown. Now this case is handled correctly and exception is not thrown.
+- now NReco.ImageGenerator.dll is a signed (strongly named) assembly</releaseNotes>
+    <copyright>Copyright 2013-2015 Vitalii Fedorchenko</copyright>
+    <tags>WkHtmlToImage html-to-image c# html jpg png svg-to-image Converter</tags>
+  </metadata>
+</package>
